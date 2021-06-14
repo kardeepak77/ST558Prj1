@@ -11,25 +11,42 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-
+require("httr")
+require("jsonlite")
 ```
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+base_url <- "https://records.nhl.com/site/api"
+tab_name <- "franchise"
+full_url <- paste0(base_url, "/", tab_name)
+get_response <- GET(full_url)
+json_contents <- content(get_response, "text")
+list_res <- fromJSON(json_contents, flatten = TRUE)
+#str(list_res$data)
+list_res$data
+#get_prices_df <- as.data.frame(json_res)
 
-```{r cars}
-summary(cars)
+#filter(list_res$data, list_res$data$teamCommonName == "Canadiens")
 ```
 
 ## Including Plots
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+base_url <- "https://records.nhl.com/site/api"
+tab_name <- "franchise-team-totals"
+id_filter <- paste0("cayenneExp=franchiseId=","17")
+full_url <- paste0(base_url, "/", tab_name, "?", id_filter)
+get_response <- GET(full_url)
+json_contents <- content(get_response, "text")
+list_res <- fromJSON(json_contents, flatten = TRUE)
+#str(list_res$data)
+list_res$data
+#get_prices_df <- as.data.frame(json_res)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
