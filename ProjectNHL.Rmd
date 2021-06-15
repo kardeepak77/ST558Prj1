@@ -19,17 +19,29 @@ require("jsonlite")
 
 
 ```{r}
-base_url <- "https://records.nhl.com/site/api"
-tab_name <- "franchise"
-full_url <- paste0(base_url, "/", tab_name)
-get_response <- GET(full_url)
-json_contents <- content(get_response, "text")
-list_res <- fromJSON(json_contents, flatten = TRUE)
-#str(list_res$data)
-list_res$data
-#get_prices_df <- as.data.frame(json_res)
+get_baseURL <- function(){ return("https://records.nhl.com/site/api") }
 
-#filter(list_res$data, list_res$data$teamCommonName == "Canadiens")
+fetch_DF <- function(api_url) {
+  get_response <- GET(api_url)
+  json_contents <- content(get_response, "text")
+  list_res <- fromJSON(json_contents, flatten = TRUE)
+  return(list_res)
+}
+getFranchise <- function() {
+  #base_url <- "https://records.nhl.com/site/api"
+  tab_name <- "franchise"
+  full_url <- paste0(get_baseURL(), "/", tab_name)
+  #get_response <- GET(full_url)
+  #json_contents <- content(get_response, "text")
+  #list_res <- fromJSON(json_contents, flatten = TRUE)
+  franchise_res <- fetch_DF(full_url)
+  #str(list_res$data)
+  franchise_res$data
+  #get_prices_df <- as.data.frame(json_res)
+  
+  #filter(list_res$data, list_res$data$teamCommonName == "Canadiens")
+}
+getFranchise()
 ```
 
 ## Including Plots
@@ -37,16 +49,82 @@ list_res$data
 You can also embed plots, for example:
 
 ```{r}
-base_url <- "https://records.nhl.com/site/api"
-tab_name <- "franchise-team-totals"
-id_filter <- paste0("cayenneExp=franchiseId=","17")
-full_url <- paste0(base_url, "/", tab_name, "?", id_filter)
-get_response <- GET(full_url)
-json_contents <- content(get_response, "text")
-list_res <- fromJSON(json_contents, flatten = TRUE)
-#str(list_res$data)
-list_res$data
-#get_prices_df <- as.data.frame(json_res)
+get_total_stats <- function(franId) {
+  tab_name <- "franchise-team-totals"
+  id_filter <- paste0("cayenneExp=franchiseId=",franId)
+  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
+  list_total_stats <- fetch_DF(full_url)
+  list_total_stats$data
+}
+get_total_stats(franId=17)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+get_season_records <- function(franId) {
+  tab_name <- "franchise-season-records"
+  id_filter <- paste0("cayenneExp=franchiseId=",franId)
+  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
+  list_total_stats <- fetch_DF(full_url)
+  list_total_stats$data
+}
+get_season_records(franId=17)
+```
+
+```{r}
+get_goalie_records <- function(franId) {
+  tab_name <- "franchise-goalie-records"
+  id_filter <- paste0("cayenneExp=franchiseId=",franId)
+  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
+  list_total_stats <- fetch_DF(full_url)
+  list_total_stats$data
+}
+get_goalie_records(franId=17)
+```
+
+```{r}
+get_skater_records <- function(franId) {
+  tab_name <- "franchise-skater-records"
+  id_filter <- paste0("cayenneExp=franchiseId=",franId)
+  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
+  list_total_stats <- fetch_DF(full_url)
+  list_total_stats$data
+}
+get_skater_records(franId=17)
+```
+
+```{r}
+get_franchise_detail <- function(teamId) {
+  tab_name <- "franchise-detail"
+  id_filter <- paste0("cayenneExp=mostRecentTeamId=",teamId)
+  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
+  list_total_stats <- fetch_DF(full_url)
+  list_total_stats$data
+}
+get_franchise_detail(teamId=17)
+```
+
+```{r}
+#https://statsapi.web.nhl.com/api/v1/teams?expand=team.stats
+#https://statsapi.web.nhl.com/api/v1/teams/17?expand=team.stats
+
+get_team_stats_for_Season <- function(teamId="") {
+  full_url <- paste0("https://statsapi.web.nhl.com/api/v1/teams/",teamId,"?expand=team.stats")
+  list_total_stats <- fetch_DF(full_url)
+  list_total_stats$teams
+}
+get_team_stats_for_Season()
+get_team_stats_for_Season(teamId=17)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
