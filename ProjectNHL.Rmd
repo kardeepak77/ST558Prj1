@@ -13,13 +13,14 @@ output:
 ```{r setup, include=FALSE}
 require("httr")
 require("jsonlite")
+require("tidyverse")
 ```
 
 ## R Markdown
 
 
 ```{r}
-get_baseURL <- function(){ return("https://records.nhl.com/site/api") }
+get_baseURL <- function() { return("https://records.nhl.com/site/api") }
 
 fetch_DF <- function(api_url) {
   get_response <- GET(api_url)
@@ -27,21 +28,61 @@ fetch_DF <- function(api_url) {
   list_res <- fromJSON(json_contents, flatten = TRUE)
   return(list_res)
 }
-getFranchise <- function() {
-  #base_url <- "https://records.nhl.com/site/api"
+
+# get All Franchise
+
+get_all_franchise <- function() {
   tab_name <- "franchise"
   full_url <- paste0(get_baseURL(), "/", tab_name)
-  #get_response <- GET(full_url)
-  #json_contents <- content(get_response, "text")
-  #list_res <- fromJSON(json_contents, flatten = TRUE)
   franchise_res <- fetch_DF(full_url)
   #str(list_res$data)
   franchise_res$data
-  #get_prices_df <- as.data.frame(json_res)
-  
-  #filter(list_res$data, list_res$data$teamCommonName == "Canadiens")
 }
-getFranchise()
+get_all_franchise()
+
+# Function returns id for team with common name matching to the argument provided. If tem name not found it will return NA.
+get_franchise_id <- function(fname) {
+  retValue <- NA
+  
+  franchise <- get_all_franchise() %>% filter(teamCommonName == fname)
+  if(nrow(franchise) == 1) {
+    retValue <- franchise$id
+  }
+  return(retValue)
+}
+
+get_franchise_id('Eagles')
+
+
+#get Franchise by id, name or all franchise if no name or id is provided.
+get_franchise <- function(franId=NA, franName="") {
+  
+  tab_name <- "franchise"
+  full_url <- ""
+  
+  if(!is.na(franId)) {
+    #get franchise by id
+    id_filter <- paste0("cayenneExp=id=",franId)
+    full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
+    
+  } else if (!is.na(franName)) {
+    #get franchise by name
+    return(get_franchise(franId = get_franchise_id(franName)))
+    
+  } else {
+    #both id and name are NA, let's return all franchises
+    full_url <- paste0(get_baseURL(), "/", tab_name)
+  
+  }
+  
+  #fetch franchise
+  franchise_res <- fetch_DF(full_url)
+  return(franchise_res$data)
+}
+
+get_franchise(franId = 3)
+
+get_franchise(franName = "Eagles")
 ```
 
 ## Including Plots
@@ -123,7 +164,7 @@ get_team_stats_for_season(teamId=17)
 NHL_wrapper_api <- function(command) {
   result = switch(  
       command,  
-      "getFranchise"= getFranchise(),  
+      "get_franchise"= get_franchise(),  
       "get_total_stats"= get_total_stats(17),  
       "get_season_records"= get_season_records(17),  
       "get_goalie_records"= get_goalie_records(17),
