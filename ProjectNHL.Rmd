@@ -108,17 +108,34 @@ get_franchise_detail(teamId=17)
 #https://statsapi.web.nhl.com/api/v1/teams?expand=team.stats
 #https://statsapi.web.nhl.com/api/v1/teams/17?expand=team.stats
 
-get_team_stats_for_Season <- function(teamId="") {
+get_team_stats_for_season <- function(teamId="") {
   full_url <- paste0("https://statsapi.web.nhl.com/api/v1/teams/",teamId,"?expand=team.stats")
   list_total_stats <- fetch_DF(full_url)
   list_total_stats$teams
 }
-get_team_stats_for_Season()
-get_team_stats_for_Season(teamId=17)
+a <- get_team_stats_for_season()
+get_team_stats_for_season(teamId=17)
+
 ```
 
 ```{r}
 
+NHL_wrapper_api <- function(command) {
+  result = switch(  
+      command,  
+      "getFranchise"= getFranchise(),  
+      "get_total_stats"= get_total_stats(17),  
+      "get_season_records"= get_season_records(17),  
+      "get_goalie_records"= get_goalie_records(17),
+      "get_skater_records"= get_skater_records(17),
+      "get_franchise_detail"= get_franchise_detail(teamId=17),
+      "get_team_stats_for_season"= get_team_stats_for_season(teamId=17),
+      "command not found"
+  )
+  return(result)
+}
+
+NHL_wrapper_api(command="get_team_stats_for_season")
 ```
 
 ```{r}
