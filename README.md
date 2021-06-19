@@ -1,15 +1,7 @@
-<<<<<<< HEAD
 ProjectNHL
 ================
 Deepak Karawande
 June 13, 2021
-=======
-##### Table of Contents  
-[Welcome to GitHub Pages](#welcome-to-gitHub-pages)  
-[Markdown](#markdown) 
-
-## Welcome to GitHub Pages
->>>>>>> f475b428d6378843e4811320d839de22065c18dc
 
 -   [Introduction](#introduction)
 -   [Packages](#packages)
@@ -23,9 +15,10 @@ June 13, 2021
 -   [Exploratory Data Analysis](#exploratory-data-analysis)
     -   [Combine Franchise Summary and Details in single summary
         table.](#combine-franchise-summary-and-details-in-single-summary-table.)
-    -   [You should create at least two new variables that are functions
-        of the variables from a data set you
-        use.](#you-should-create-at-least-two-new-variables-that-are-functions-of-the-variables-from-a-data-set-you-use.)
+    -   [Creating new variables](#creating-new-variables)
+    -   [Contingency tables](#contingency-tables)
+    -   [Numerical summeries](#numerical-summeries)
+    -   [Plots](#plots)
 
 # Introduction
 
@@ -654,7 +647,13 @@ TRUE
 </tbody>
 </table>
 
-## You should create at least two new variables that are functions of the variables from a data set you use.
+## Creating new variables
+
+There are many ways to compute/add more variables to the dataset you are
+working with. I used group\_by and summarise functions toc create two
+new varaibles totalWins and toalLosses for each unique combinatoin of
+Franchise Id & Team. Also computed percentage wins for each such
+combination of Franchise Id & Team using total wins and total losses.
 
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
@@ -782,877 +781,19 @@ Boston Bruins
 0.57
 </td>
 </tr>
-<tr>
-<td style="text-align:right;">
-34
-</td>
-<td style="text-align:left;">
-Nashville Predators
-</td>
-<td style="text-align:right;">
-906
-</td>
-<td style="text-align:right;">
-723
-</td>
-<td style="text-align:right;">
-0.56
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:left;">
-Winnipeg Jets
-</td>
-<td style="text-align:right;">
-398
-</td>
-<td style="text-align:right;">
-315
-</td>
-<td style="text-align:right;">
-0.56
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-37
-</td>
-<td style="text-align:left;">
-Minnesota Wild
-</td>
-<td style="text-align:right;">
-789
-</td>
-<td style="text-align:right;">
-653
-</td>
-<td style="text-align:right;">
-0.55
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-Ottawa Senators (1917)
-</td>
-<td style="text-align:right;">
-276
-</td>
-<td style="text-align:right;">
-238
-</td>
-<td style="text-align:right;">
-0.54
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:left;">
-Detroit Red Wings
-</td>
-<td style="text-align:right;">
-3216
-</td>
-<td style="text-align:right;">
-2739
-</td>
-<td style="text-align:right;">
-0.54
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:left;">
-Calgary Flames
-</td>
-<td style="text-align:right;">
-1600
-</td>
-<td style="text-align:right;">
-1354
-</td>
-<td style="text-align:right;">
-0.54
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-32
-</td>
-<td style="text-align:left;">
-Anaheim Ducks
-</td>
-<td style="text-align:right;">
-1079
-</td>
-<td style="text-align:right;">
-907
-</td>
-<td style="text-align:right;">
-0.54
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:left;">
-St. Louis Blues
-</td>
-<td style="text-align:right;">
-2111
-</td>
-<td style="text-align:right;">
-1866
-</td>
-<td style="text-align:right;">
-0.53
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-19
-</td>
-<td style="text-align:left;">
-Buffalo Sabres
-</td>
-<td style="text-align:right;">
-1929
-</td>
-<td style="text-align:right;">
-1696
-</td>
-<td style="text-align:right;">
-0.53
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-23
-</td>
-<td style="text-align:left;">
-New Jersey Devils
-</td>
-<td style="text-align:right;">
-1531
-</td>
-<td style="text-align:right;">
-1331
-</td>
-<td style="text-align:right;">
-0.53
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-24
-</td>
-<td style="text-align:left;">
-Washington Capitals
-</td>
-<td style="text-align:right;">
-1838
-</td>
-<td style="text-align:right;">
-1623
-</td>
-<td style="text-align:right;">
-0.53
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-25
-</td>
-<td style="text-align:left;">
-Edmonton Oilers
-</td>
-<td style="text-align:right;">
-1629
-</td>
-<td style="text-align:right;">
-1449
-</td>
-<td style="text-align:right;">
-0.53
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:left;">
-Carolina Hurricanes
-</td>
-<td style="text-align:right;">
-885
-</td>
-<td style="text-align:right;">
-779
-</td>
-<td style="text-align:right;">
-0.53
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-29
-</td>
-<td style="text-align:left;">
-San Jose Sharks
-</td>
-<td style="text-align:right;">
-1189
-</td>
-<td style="text-align:right;">
-1042
-</td>
-<td style="text-align:right;">
-0.53
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-17
-</td>
-<td style="text-align:left;">
-Pittsburgh Penguins
-</td>
-<td style="text-align:right;">
-2112
-</td>
-<td style="text-align:right;">
-1916
-</td>
-<td style="text-align:right;">
-0.52
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-22
-</td>
-<td style="text-align:left;">
-New York Islanders
-</td>
-<td style="text-align:right;">
-1858
-</td>
-<td style="text-align:right;">
-1726
-</td>
-<td style="text-align:right;">
-0.52
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:left;">
-Phoenix Coyotes
-</td>
-<td style="text-align:right;">
-637
-</td>
-<td style="text-align:right;">
-581
-</td>
-<td style="text-align:right;">
-0.52
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-31
-</td>
-<td style="text-align:left;">
-Tampa Bay Lightning
-</td>
-<td style="text-align:right;">
-1086
-</td>
-<td style="text-align:right;">
-1022
-</td>
-<td style="text-align:right;">
-0.52
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:left;">
-Toronto Maple Leafs
-</td>
-<td style="text-align:right;">
-3132
-</td>
-<td style="text-align:right;">
-2979
-</td>
-<td style="text-align:right;">
-0.51
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:left;">
-Montreal Maroons
-</td>
-<td style="text-align:right;">
-291
-</td>
-<td style="text-align:right;">
-281
-</td>
-<td style="text-align:right;">
-0.51
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:left;">
-New York Rangers
-</td>
-<td style="text-align:right;">
-3127
-</td>
-<td style="text-align:right;">
-2982
-</td>
-<td style="text-align:right;">
-0.51
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-30
-</td>
-<td style="text-align:left;">
-Ottawa Senators
-</td>
-<td style="text-align:right;">
-1043
-</td>
-<td style="text-align:right;">
-1019
-</td>
-<td style="text-align:right;">
-0.51
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:left;">
-Chicago Blackhawks
-</td>
-<td style="text-align:right;">
-3080
-</td>
-<td style="text-align:right;">
-3036
-</td>
-<td style="text-align:right;">
-0.50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:left;">
-Atlanta Flames
-</td>
-<td style="text-align:right;">
-270
-</td>
-<td style="text-align:right;">
-275
-</td>
-<td style="text-align:right;">
-0.50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-33
-</td>
-<td style="text-align:left;">
-Florida Panthers
-</td>
-<td style="text-align:right;">
-910
-</td>
-<td style="text-align:right;">
-903
-</td>
-<td style="text-align:right;">
-0.50
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:left;">
-Toronto St. Patricks
-</td>
-<td style="text-align:right;">
-113
-</td>
-<td style="text-align:right;">
-117
-</td>
-<td style="text-align:right;">
-0.49
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:left;">
-Los Angeles Kings
-</td>
-<td style="text-align:right;">
-1865
-</td>
-<td style="text-align:right;">
-1973
-</td>
-<td style="text-align:right;">
-0.49
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-36
-</td>
-<td style="text-align:left;">
-Columbus Blue Jackets
-</td>
-<td style="text-align:right;">
-693
-</td>
-<td style="text-align:right;">
-724
-</td>
-<td style="text-align:right;">
-0.49
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:left;">
-Vancouver Canucks
-</td>
-<td style="text-align:right;">
-1760
-</td>
-<td style="text-align:right;">
-1881
-</td>
-<td style="text-align:right;">
-0.48
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:left;">
-Toronto Arenas
-</td>
-<td style="text-align:right;">
-22
-</td>
-<td style="text-align:right;">
-25
-</td>
-<td style="text-align:right;">
-0.47
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:left;">
-Detroit Falcons
-</td>
-<td style="text-align:right;">
-34
-</td>
-<td style="text-align:right;">
-42
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-27
-</td>
-<td style="text-align:left;">
-Quebec Nordiques
-</td>
-<td style="text-align:right;">
-532
-</td>
-<td style="text-align:right;">
-644
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:left;">
-Arizona Coyotes
-</td>
-<td style="text-align:right;">
-218
-</td>
-<td style="text-align:right;">
-267
-</td>
-<td style="text-align:right;">
-0.45
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:left;">
-Minnesota North Stars
-</td>
-<td style="text-align:right;">
-838
-</td>
-<td style="text-align:right;">
-1056
-</td>
-<td style="text-align:right;">
-0.44
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:left;">
-Atlanta Thrashers
-</td>
-<td style="text-align:right;">
-342
-</td>
-<td style="text-align:right;">
-441
-</td>
-<td style="text-align:right;">
-0.44
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:left;">
-Hartford Whalers
-</td>
-<td style="text-align:right;">
-552
-</td>
-<td style="text-align:right;">
-740
-</td>
-<td style="text-align:right;">
-0.43
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:left;">
-Winnipeg Jets (1979)
-</td>
-<td style="text-align:right;">
-525
-</td>
-<td style="text-align:right;">
-703
-</td>
-<td style="text-align:right;">
-0.43
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:left;">
-Detroit Cougars
-</td>
-<td style="text-align:right;">
-64
-</td>
-<td style="text-align:right;">
-89
-</td>
-<td style="text-align:right;">
-0.42
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:left;">
-New York Americans
-</td>
-<td style="text-align:right;">
-245
-</td>
-<td style="text-align:right;">
-384
-</td>
-<td style="text-align:right;">
-0.39
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-Hamilton Tigers
-</td>
-<td style="text-align:right;">
-47
-</td>
-<td style="text-align:right;">
-78
-</td>
-<td style="text-align:right;">
-0.38
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:left;">
-Brooklyn Americans
-</td>
-<td style="text-align:right;">
-16
-</td>
-<td style="text-align:right;">
-29
-</td>
-<td style="text-align:right;">
-0.36
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:left;">
-Pittsburgh Pirates
-</td>
-<td style="text-align:right;">
-68
-</td>
-<td style="text-align:right;">
-124
-</td>
-<td style="text-align:right;">
-0.35
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:left;">
-Cleveland Barons
-</td>
-<td style="text-align:right;">
-47
-</td>
-<td style="text-align:right;">
-87
-</td>
-<td style="text-align:right;">
-0.35
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:left;">
-Oakland Seals
-</td>
-<td style="text-align:right;">
-69
-</td>
-<td style="text-align:right;">
-126
-</td>
-<td style="text-align:right;">
-0.35
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:left;">
-California Golden Seals
-</td>
-<td style="text-align:right;">
-116
-</td>
-<td style="text-align:right;">
-283
-</td>
-<td style="text-align:right;">
-0.29
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-23
-</td>
-<td style="text-align:left;">
-Colorado Rockies
-</td>
-<td style="text-align:right;">
-113
-</td>
-<td style="text-align:right;">
-283
-</td>
-<td style="text-align:right;">
-0.29
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-St. Louis Eagles
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-31
-</td>
-<td style="text-align:right;">
-0.26
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-23
-</td>
-<td style="text-align:left;">
-Kansas City Scouts
-</td>
-<td style="text-align:right;">
-27
-</td>
-<td style="text-align:right;">
-110
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Montreal Wanderers
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-0.17
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-Quebec Bulldogs
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-0.17
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:left;">
-Philadelphia Quakers
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-36
-</td>
-<td style="text-align:right;">
-0.10
-</td>
-</tr>
 </tbody>
 </table>
-You should create some contingency tables
+
+## Contingency tables
+
+Contengency tables were created for Total goals scored by saketers by
+his position and franchise Id. 2 seperate tables were cerated by
+considering active and inactive players.
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Active Players: Goal Counts by FranchiseID and Position
+</caption>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1678,16 +819,16 @@ Right Wing Forward
 Anaheim Ducks
 </td>
 <td style="text-align:right;">
-1659
+677
 </td>
 <td style="text-align:right;">
-859
+237
 </td>
 <td style="text-align:right;">
-1392
+308
 </td>
 <td style="text-align:right;">
-1712
+797
 </td>
 </tr>
 <tr>
@@ -1695,16 +836,16 @@ Anaheim Ducks
 Arizona Coyotes
 </td>
 <td style="text-align:right;">
-2909
+294
 </td>
 <td style="text-align:right;">
-1554
+351
 </td>
 <td style="text-align:right;">
-2362
+200
 </td>
 <td style="text-align:right;">
-2835
+272
 </td>
 </tr>
 <tr>
@@ -1712,16 +853,144 @@ Arizona Coyotes
 Boston Bruins
 </td>
 <td style="text-align:right;">
-6687
+1020
 </td>
 <td style="text-align:right;">
-3017
+359
 </td>
 <td style="text-align:right;">
-5649
+663
 </td>
 <td style="text-align:right;">
-5691
+420
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Buffalo Sabres
+</td>
+<td style="text-align:right;">
+450
+</td>
+<td style="text-align:right;">
+217
+</td>
+<td style="text-align:right;">
+377
+</td>
+<td style="text-align:right;">
+218
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Calgary Flames
+</td>
+<td style="text-align:right;">
+600
+</td>
+<td style="text-align:right;">
+308
+</td>
+<td style="text-align:right;">
+434
+</td>
+<td style="text-align:right;">
+96
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Carolina Hurricanes
+</td>
+<td style="text-align:right;">
+970
+</td>
+<td style="text-align:right;">
+244
+</td>
+<td style="text-align:right;">
+471
+</td>
+<td style="text-align:right;">
+110
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Inactive Players: Goal Counts by FranchiseID and Position
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+franchiseName
+</th>
+<th style="text-align:right;">
+Center Forward
+</th>
+<th style="text-align:right;">
+Defenseman
+</th>
+<th style="text-align:right;">
+Left Wing Forward
+</th>
+<th style="text-align:right;">
+Right Wing Forward
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Anaheim Ducks
+</td>
+<td style="text-align:right;">
+982
+</td>
+<td style="text-align:right;">
+622
+</td>
+<td style="text-align:right;">
+1084
+</td>
+<td style="text-align:right;">
+915
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arizona Coyotes
+</td>
+<td style="text-align:right;">
+2615
+</td>
+<td style="text-align:right;">
+1203
+</td>
+<td style="text-align:right;">
+2162
+</td>
+<td style="text-align:right;">
+2563
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Boston Bruins
+</td>
+<td style="text-align:right;">
+5667
+</td>
+<td style="text-align:right;">
+2658
+</td>
+<td style="text-align:right;">
+4986
+</td>
+<td style="text-align:right;">
+5271
 </td>
 </tr>
 <tr>
@@ -1746,16 +1015,16 @@ Brooklyn Americans
 Buffalo Sabres
 </td>
 <td style="text-align:right;">
-3966
+3516
 </td>
 <td style="text-align:right;">
-1563
+1346
 </td>
 <td style="text-align:right;">
-3229
+2852
 </td>
 <td style="text-align:right;">
-3631
+3413
 </td>
 </tr>
 <tr>
@@ -1763,566 +1032,26 @@ Buffalo Sabres
 Calgary Flames
 </td>
 <td style="text-align:right;">
-4036
+3436
 </td>
 <td style="text-align:right;">
-1805
+1497
 </td>
 <td style="text-align:right;">
-2729
+2295
 </td>
 <td style="text-align:right;">
-3692
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Carolina Hurricanes
-</td>
-<td style="text-align:right;">
-3298
-</td>
-<td style="text-align:right;">
-1328
-</td>
-<td style="text-align:right;">
-2828
-</td>
-<td style="text-align:right;">
-2113
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Chicago Blackhawks
-</td>
-<td style="text-align:right;">
-5932
-</td>
-<td style="text-align:right;">
-2610
-</td>
-<td style="text-align:right;">
-5546
-</td>
-<td style="text-align:right;">
-5374
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Cleveland Barons
-</td>
-<td style="text-align:right;">
-713
-</td>
-<td style="text-align:right;">
-335
-</td>
-<td style="text-align:right;">
-446
-</td>
-<td style="text-align:right;">
-802
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Colorado Avalanche
-</td>
-<td style="text-align:right;">
-3530
-</td>
-<td style="text-align:right;">
-1441
-</td>
-<td style="text-align:right;">
-2998
-</td>
-<td style="text-align:right;">
-2440
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Columbus Blue Jackets
-</td>
-<td style="text-align:right;">
-1317
-</td>
-<td style="text-align:right;">
-619
-</td>
-<td style="text-align:right;">
-1250
-</td>
-<td style="text-align:right;">
-835
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Dallas Stars
-</td>
-<td style="text-align:right;">
-4465
-</td>
-<td style="text-align:right;">
-1643
-</td>
-<td style="text-align:right;">
-3451
-</td>
-<td style="text-align:right;">
-3099
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Detroit Red Wings
-</td>
-<td style="text-align:right;">
-7398
-</td>
-<td style="text-align:right;">
-2536
-</td>
-<td style="text-align:right;">
-5315
-</td>
-<td style="text-align:right;">
-4841
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Edmonton Oilers
-</td>
-<td style="text-align:right;">
-3817
-</td>
-<td style="text-align:right;">
-1612
-</td>
-<td style="text-align:right;">
-2289
-</td>
-<td style="text-align:right;">
-2983
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Florida Panthers
-</td>
-<td style="text-align:right;">
-1870
-</td>
-<td style="text-align:right;">
-857
-</td>
-<td style="text-align:right;">
-1303
-</td>
-<td style="text-align:right;">
-1564
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hamilton Tigers
-</td>
-<td style="text-align:right;">
-239
-</td>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-65
-</td>
-<td style="text-align:right;">
-122
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Los Angeles Kings
-</td>
-<td style="text-align:right;">
-4231
-</td>
-<td style="text-align:right;">
-1862
-</td>
-<td style="text-align:right;">
-3452
-</td>
-<td style="text-align:right;">
-3439
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Minnesota Wild
-</td>
-<td style="text-align:right;">
-1356
-</td>
-<td style="text-align:right;">
-628
-</td>
-<td style="text-align:right;">
-982
-</td>
-<td style="text-align:right;">
-1129
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Montréal Canadiens
-</td>
-<td style="text-align:right;">
-6606
-</td>
-<td style="text-align:right;">
-2828
-</td>
-<td style="text-align:right;">
-6039
-</td>
-<td style="text-align:right;">
-6256
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Montreal Maroons
-</td>
-<td style="text-align:right;">
-531
-</td>
-<td style="text-align:right;">
-294
-</td>
-<td style="text-align:right;">
-304
-</td>
-<td style="text-align:right;">
-345
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Montreal Wanderers
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Nashville Predators
-</td>
-<td style="text-align:right;">
-1696
-</td>
-<td style="text-align:right;">
-883
-</td>
-<td style="text-align:right;">
-1005
-</td>
-<td style="text-align:right;">
-1070
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-New Jersey Devils
-</td>
-<td style="text-align:right;">
-3611
-</td>
-<td style="text-align:right;">
-1421
-</td>
-<td style="text-align:right;">
-2126
-</td>
-<td style="text-align:right;">
-3354
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-New York Islanders
-</td>
-<td style="text-align:right;">
-4145
-</td>
-<td style="text-align:right;">
-1643
-</td>
-<td style="text-align:right;">
-2706
-</td>
-<td style="text-align:right;">
-3464
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-New York Rangers
-</td>
-<td style="text-align:right;">
-6090
-</td>
-<td style="text-align:right;">
-2815
-</td>
-<td style="text-align:right;">
-5060
-</td>
-<td style="text-align:right;">
-5997
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ottawa Senators
-</td>
-<td style="text-align:right;">
-2198
-</td>
-<td style="text-align:right;">
-962
-</td>
-<td style="text-align:right;">
-1281
-</td>
-<td style="text-align:right;">
-1750
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Philadelphia Flyers
-</td>
-<td style="text-align:right;">
-4794
-</td>
-<td style="text-align:right;">
-1839
-</td>
-<td style="text-align:right;">
-3215
-</td>
-<td style="text-align:right;">
-3788
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Philadelphia Quakers
-</td>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-106
-</td>
-<td style="text-align:right;">
-255
-</td>
-<td style="text-align:right;">
-71
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pittsburgh Penguins
-</td>
-<td style="text-align:right;">
-5195
-</td>
-<td style="text-align:right;">
-1799
-</td>
-<td style="text-align:right;">
-2829
-</td>
-<td style="text-align:right;">
-3968
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-San Jose Sharks
-</td>
-<td style="text-align:right;">
-2632
-</td>
-<td style="text-align:right;">
-931
-</td>
-<td style="text-align:right;">
-1330
-</td>
-<td style="text-align:right;">
-1520
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-St. Louis Blues
-</td>
-<td style="text-align:right;">
-4072
-</td>
-<td style="text-align:right;">
-1645
-</td>
-<td style="text-align:right;">
-2822
-</td>
-<td style="text-align:right;">
-4214
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-St. Louis Eagles
-</td>
-<td style="text-align:right;">
-294
-</td>
-<td style="text-align:right;">
-323
-</td>
-<td style="text-align:right;">
-522
-</td>
-<td style="text-align:right;">
-405
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tampa Bay Lightning
-</td>
-<td style="text-align:right;">
-2409
-</td>
-<td style="text-align:right;">
-846
-</td>
-<td style="text-align:right;">
-1399
-</td>
-<td style="text-align:right;">
-1494
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Toronto Maple Leafs
-</td>
-<td style="text-align:right;">
-6739
-</td>
-<td style="text-align:right;">
-2812
-</td>
-<td style="text-align:right;">
-5485
-</td>
-<td style="text-align:right;">
-5781
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Vancouver Canucks
-</td>
-<td style="text-align:right;">
-3641
-</td>
-<td style="text-align:right;">
-1816
-</td>
-<td style="text-align:right;">
-3507
-</td>
-<td style="text-align:right;">
-3102
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Vegas Golden Knights
-</td>
-<td style="text-align:right;">
-344
-</td>
-<td style="text-align:right;">
-145
-</td>
-<td style="text-align:right;">
-226
-</td>
-<td style="text-align:right;">
-213
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Washington Capitals
-</td>
-<td style="text-align:right;">
-3474
-</td>
-<td style="text-align:right;">
-1754
-</td>
-<td style="text-align:right;">
-2718
-</td>
-<td style="text-align:right;">
-3502
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Winnipeg Jets
-</td>
-<td style="text-align:right;">
-1427
-</td>
-<td style="text-align:right;">
-650
-</td>
-<td style="text-align:right;">
-1610
-</td>
-<td style="text-align:right;">
-914
+3596
 </td>
 </tr>
 </tbody>
 </table>
-You should create numerical summaries for some quantitative variables at
-each setting of some of your categorical variables
+
+## Numerical summeries
+
+Numerical summeries were created for toals, gamesPlayed,
+mostGoalsOneGame, mostGoalsOneSeason by skaters with differnt positions
+as follows -
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Summary Goals by Position Center Forward
@@ -2831,6 +1560,8 @@ Max.
 </tr>
 </tbody>
 </table>
+
+## Plots
 
 You should create at least five plots utilizing coloring, grouping, etc.
 All plots should have nice labels and titles.

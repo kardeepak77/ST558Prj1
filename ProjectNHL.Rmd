@@ -320,11 +320,14 @@ franchise_joined %>%
 
 ```
 
-## You should create at least two new variables that are functions of the variables from a data set you use.
+## Creating new variables
+There are many ways to compute/add more variables to the dataset you are working with. I used group_by and summarise functions toc create two new varaibles totalWins and toalLosses for each unique combinatoin of Franchise Id & Team.
+Also computed percentage wins for each such combination of Franchise Id & Team using total wins and total losses. 
 
 ```{r echo=FALSE, eval=TRUE}
 # calculate % of wins or % losses
 Team_total_stats <- as.tbl(NHL_wrapper_api(command="get_total_stats"))
+
 #colnames(Team_total_stats)
 Team_total_stats %>% 
   select(teamName, franchiseId, wins, losses) %>% 
@@ -332,10 +335,14 @@ Team_total_stats %>%
   summarise(totalWins = sum(wins), totalLosses = sum(losses)) %>%
   mutate(perWins = round(totalWins/(totalWins+totalLosses),2)) %>%
   arrange(desc(perWins)) %>%
+  head() %>%
   knitr::kable(caption="Win/Loss Percentages by Franchise & Teams") %>%
   kable_styling()
 ```
-You should create some contingency tables
+## Contingency tables
+Contengency tables were created for Total goals scored by saketers by his position and franchise Id. 
+2 seperate tables were cerated by considering active and inactive players.
+
 ```{r echo=FALSE, eval=TRUE}
 # create contingency table for franchise, Wins, losses, %wins
 skaters <- as.tbl(NHL_wrapper_api(command="get_skater_records"))
@@ -343,17 +350,29 @@ skaters <- as.tbl(NHL_wrapper_api(command="get_skater_records"))
 skaters$positionCode <- factor(skaters$positionCode)
 skaters$franchiseName <- factor(skaters$franchiseName)
 
-levels(skaters$positionCode) <- c( "Center Forward", "Defenseman", "Left Wing Forward", "Right Wing Forward")
+levels(skaters$positionCode) <- c("Center Forward", "Defenseman", "Left Wing Forward", "Right Wing Forward")
 
 skaters %>%
+  filter(activePlayer == TRUE) %>%
+  group_by(franchiseName, positionCode) %>%
+  summarise(TotalGoals=sum(goals)) %>%
+  spread(positionCode, TotalGoals) %>%
+  head() %>%
+  knitr::kable(caption="Active Players: Goal Counts by FranchiseID and Position") %>%
+  kable_styling()
+
+skaters %>%
+  filter(activePlayer == FALSE) %>%
   group_by(franchiseName,positionCode) %>%
   summarise(TotalGoals=sum(goals)) %>%
   spread(positionCode, TotalGoals) %>%
-  kable() %>%
+  head() %>%
+  knitr::kable(caption="Inactive Players: Goal Counts by FranchiseID and Position") %>%
   kable_styling()
-
 ```
-You should create numerical summaries for some quantitative variables at each setting of some of your categorical variables
+
+## Numerical summeries
+Numerical summeries were created for toals, gamesPlayed, mostGoalsOneGame, mostGoalsOneSeason by skaters with differnt positions as follows -
 ```{r echo=FALSE, eval=TRUE}
 # Numerical Summaries
 
@@ -370,6 +389,7 @@ sakters_table("Right Wing Forward")
 
 ```
 
+## Plots
 You should create at least five plots utilizing coloring, grouping, etc. All plots should have nice labels and titles. 
 ```{r}
 # Bar plot, 
