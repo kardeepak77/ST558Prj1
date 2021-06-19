@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 ProjectNHL
 ================
 Deepak Karawande
 June 13, 2021
+=======
+##### Table of Contents  
+[Welcome to GitHub Pages](#welcome-to-gitHub-pages)  
+[Markdown](#markdown) 
+
+## Welcome to GitHub Pages
+>>>>>>> f475b428d6378843e4811320d839de22065c18dc
 
 -   [Introduction](#introduction)
 -   [Packages](#packages)
