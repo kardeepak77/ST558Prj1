@@ -3,23 +3,29 @@ title: "ProjectNHL"
 author: "Deepak Karawande"
 date: "June 13, 2021"
 output:
-  github_document:
-    toc: yes
   html_document:
     toc: yes
     toc_float: no
+  github_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
-require("httr")
-require("jsonlite")
-require("tidyverse")
+knitr::opts_chunk$set(echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE)
+library("httr")
+library("jsonlite")
+library("tidyverse")
+library("dplyr")
+library("kableExtra")
+#require("knitr")
+#library("DT")
+
+
 ```
 
 ## R Markdown
 
-
-```{r}
+```{r echo=FALSE, eval=TRUE}
 get_baseURL <- function() { return("https://records.nhl.com/site/api") }
 
 fetch_DF <- function(api_url) {
@@ -38,151 +44,320 @@ get_all_franchise <- function() {
   #str(list_res$data)
   franchise_res$data
 }
-get_all_franchise()
+#get_all_franchise()
 
-# Function returns id for team with common name matching to the argument provided. If tem name not found it will return NA.
-get_franchise_id <- function(fname) {
+# Function returns id for franchise with common name matching to the argument provided. If tem name not found it will return -1.
+get_franchise_id <- function(fran_id=NA, fran_name=NA) {
   retValue <- NA
   
-  franchise <- get_all_franchise() %>% filter(teamCommonName == fname)
-  if(nrow(franchise) == 1) {
-    retValue <- franchise$id
+  if(!is.na(fran_id)){
+    return(fran_id)
+  } else if(!is.na(fran_name)) {
+    #get id from name
+    franchise <- get_all_franchise() %>% filter(teamCommonName == fran_name)
+    if(nrow(franchise) == 1) {
+      retValue <- franchise$id
+    } else {
+      #we couldn't find the teamid for team name specified.
+      retValue <- -1
+    }
   }
   return(retValue)
 }
 
-get_franchise_id('Eagles')
+#Test Code
+#get_franchise_id(fran_name='Eagles')
+#get_franchise_id(fran_id=3)
+#get_franchise_id()
+#get_all_franchise()
 
 
-#get Franchise by id, name or all franchise if no name or id is provided.
-get_franchise <- function(franId=NA, franName="") {
-  
-  tab_name <- "franchise"
-  full_url <- ""
-  
-  if(!is.na(franId)) {
-    #get franchise by id
-    id_filter <- paste0("cayenneExp=id=",franId)
-    full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
-    
-  } else if (!is.na(franName)) {
-    #get franchise by name
-    return(get_franchise(franId = get_franchise_id(franName)))
-    
-  } else {
-    #both id and name are NA, let's return all franchises
-    full_url <- paste0(get_baseURL(), "/", tab_name)
-  
-  }
-  
-  #fetch franchise
+get_baseURL_stats_teams <- function() {
+  return("https://statsapi.web.nhl.com/api/v1/teams/")
+}
+# get All Teams
+
+get_all_teams <- function() {
+  full_url <- get_baseURL_stats_teams()
   franchise_res <- fetch_DF(full_url)
-  return(franchise_res$data)
+  franchise_res$teams
 }
 
-get_franchise(franId = 3)
+# Function returns id for team with common name matching to the argument provided. If team name not found it will return -1.
+get_team_id <- function(team_id=NA, team_name=NA) {
+  retValue <- NA
+  
+  if(!is.na(team_id)){
+    return(team_id)
+  } else if(!is.na(team_name)) {
+    #get id from name
+    team <- get_all_teams() %>% filter(teamName == team_name)
+    if(nrow(team) == 1) {
+      retValue <- team$id
+    } else {
+      #we couldn't find the teamid for team name specified.
+      retValue <- -1
+    }
+  }
+  return(retValue)
+}
 
-get_franchise(franName = "Eagles")
+# Test Code
+# get_team_id(team_id=2)
+# get_team_id(team_name="Rangers")
 ```
 
 ## Including Plots
 
 You can also embed plots, for example:
 
-```{r}
-get_total_stats <- function(franId) {
-  tab_name <- "franchise-team-totals"
-  id_filter <- paste0("cayenneExp=franchiseId=",franId)
-  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
-  list_total_stats <- fetch_DF(full_url)
-  list_total_stats$data
-}
-get_total_stats(franId=17)
-```
+```{r echo=FALSE, eval=TRUE}
+# Get NHL records as data.frame for given team by id/name or all. If team not found then empty data.frame is returned.
+get_NHL_records <- function(tab_name, fran_id=NA, fran_name=NA) {
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-```{r}
-get_season_records <- function(franId) {
-  tab_name <- "franchise-season-records"
-  id_filter <- paste0("cayenneExp=franchiseId=",franId)
-  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
-  list_total_stats <- fetch_DF(full_url)
-  list_total_stats$data
+  full_url <- ""
+  id_filter <- ""
+  id <- get_franchise_id(fran_id, fran_name)
+  
+  if(!is.na(id)) {
+    if(id != -1) {
+    # fetch franchise information for given team id.
+      if(tab_name == "franchise" | tab_name == "franchise-detail") {
+        id_filter <- paste0("cayenneExp=id=",id)
+      } else {
+        id_filter <- paste0("cayenneExp=franchiseId=",id)
+      }
+      full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
+    } else {
+      # Couldn't fine franchise by the name provided.
+      return(data.frame())
+    }
+  } else {
+    #fetch franchise information for all teams
+    full_url <- paste0(get_baseURL(), "/", tab_name)
+  }
+  
+  #fetch NHL records
+  records_res <- fetch_DF(full_url)
+  return(records_res$data)
 }
-get_season_records(franId=17)
-```
 
-```{r}
-get_goalie_records <- function(franId) {
-  tab_name <- "franchise-goalie-records"
-  id_filter <- paste0("cayenneExp=franchiseId=",franId)
-  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
-  list_total_stats <- fetch_DF(full_url)
-  list_total_stats$data
-}
-get_goalie_records(franId=17)
-```
-
-```{r}
-get_skater_records <- function(franId) {
-  tab_name <- "franchise-skater-records"
-  id_filter <- paste0("cayenneExp=franchiseId=",franId)
-  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
-  list_total_stats <- fetch_DF(full_url)
-  list_total_stats$data
-}
-get_skater_records(franId=17)
-```
-
-```{r}
-get_franchise_detail <- function(teamId) {
-  tab_name <- "franchise-detail"
-  id_filter <- paste0("cayenneExp=mostRecentTeamId=",teamId)
-  full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
-  list_total_stats <- fetch_DF(full_url)
-  list_total_stats$data
-}
-get_franchise_detail(teamId=17)
-```
-
-```{r}
-#https://statsapi.web.nhl.com/api/v1/teams?expand=team.stats
-#https://statsapi.web.nhl.com/api/v1/teams/17?expand=team.stats
-
-get_team_stats_for_season <- function(teamId="") {
-  full_url <- paste0("https://statsapi.web.nhl.com/api/v1/teams/",teamId,"?expand=team.stats")
-  list_total_stats <- fetch_DF(full_url)
-  list_total_stats$teams
-}
-a <- get_team_stats_for_season()
-get_team_stats_for_season(teamId=17)
+#Test Code
+# #get Franchise by id, name or all franchise if no name or id is provided.
+# get_NHL_records("franchise")
+# get_NHL_records("franchise", fran_id=17 )
+# get_NHL_records("franchise", fran_name='Eagles' )
+# 
+# # Get Total Stats for given franchise by id/name or all.
+# get_NHL_records("franchise-team-totals")
+# get_NHL_records("franchise-team-totals", fran_id=17 )
+# get_NHL_records("franchise-team-totals", fran_name='Eagles')
+# 
+# # Get seasonal records for Franchise by id/name or all.
+# get_NHL_records("franchise-season-records")
+# get_NHL_records("franchise-season-records", fran_id=17 )
+# get_NHL_records("franchise-season-records", fran_name='Eagles')
+# 
+# # Get goalie records for Franchise by id/name or all.
+# get_NHL_records("franchise-goalie-records")
+# get_NHL_records("franchise-goalie-records", fran_id=17 )
+# get_NHL_records("franchise-goalie-records", fran_name='Eagles')
+# 
+# # Get skater records for Franchise by id/name or all.
+# get_NHL_records("franchise-skater-records")
+# get_NHL_records("franchise-skater-records", fran_id=17 )
+# get_NHL_records("franchise-skater-records", fran_name='Eagles')
+# 
+# # Get skater records for Franchise by id/name or all.
+# get_NHL_records("franchise-detail")
+#get_NHL_records("franchise-detail", fran_id=17 )
+# get_NHL_records("franchise-detail", fran_name='Eagles')
 
 ```
 
-```{r}
 
-NHL_wrapper_api <- function(command) {
+```{r echo=FALSE, eval=TRUE}
+
+# Get NHL stats as data.frame for given team by id/name or all. If team not found then empty data.frame is returned.
+get_NHL_stats <- function(team_id=NA, team_name=NA) {
+  full_url <- ""
+  id <- get_team_id(team_id, team_name)
+  
+  if(!is.na(id)) {
+    if(id != -1) {
+      #fetch franchise information for given team id
+      full_url <- paste0(get_baseURL_stats_teams(),id,"?expand=team.stats")
+    } else {
+      # no team found for this id return empty dataframe.
+      return(data.frame())
+    }
+  } else {
+    full_url <- get_baseURL_stats_teams()
+  }
+  list_total_stats <- fetch_DF(full_url)
+  return(list_total_stats$teams)
+}
+
+#Test Code
+#get_NHL_stats()
+#get_NHL_stats(team_id=2)
+#get_NHL_stats(team_name="Bruins")
+#get_NHL_stats(team_name="Eagles")
+
+```
+
+```{r echo=FALSE, eval=TRUE}
+
+NHL_wrapper_api <- function(command, fran_id=NA, fran_name=NA, team_id=NA, team_name=NA) {
   result = switch(  
       command,  
-      "get_franchise"= get_franchise(),  
-      "get_total_stats"= get_total_stats(17),  
-      "get_season_records"= get_season_records(17),  
-      "get_goalie_records"= get_goalie_records(17),
-      "get_skater_records"= get_skater_records(17),
-      "get_franchise_detail"= get_franchise_detail(teamId=17),
-      "get_team_stats_for_season"= get_team_stats_for_season(teamId=17),
-      "command not found"
+      "get_franchise"= get_NHL_records("franchise", fran_id, fran_name),  
+      "get_total_stats"= get_NHL_records("franchise-team-totals", fran_id, fran_name),  
+      "get_season_records"= get_NHL_records("franchise-season-records", fran_id, fran_name),  
+      "get_goalie_records"= get_NHL_records("franchise-goalie-records", fran_id, fran_name),
+      "get_skater_records"= get_NHL_records("franchise-skater-records", fran_id, fran_name),
+      "get_franchise_detail"= get_NHL_records("franchise-detail", fran_id, fran_name),
+      "get_stats_for_team"=get_NHL_stats(team_id, team_name),
+      print0("command not found, available commands are = \n",
+             "get_franchise",
+             "get_total_stats",
+             "get_season_records",
+             "get_goalie_records",
+             "get_skater_records",
+             "get_franchise_detail",
+             "get_team_stats_for_season",
+             "get_stats_for_team"
+             )
   )
   return(result)
 }
 
-NHL_wrapper_api(command="get_team_stats_for_season")
+#Test Code
+# NHL_wrapper_api(command="get_franchise")
+# NHL_wrapper_api(command="get_total_stats")
+# NHL_wrapper_api(command="get_season_records")
+# NHL_wrapper_api(command="get_goalie_records")
+# NHL_wrapper_api(command="get_skater_records")
+# NHL_wrapper_api(command="get_franchise_detail")
+# NHL_wrapper_api(command="get_stats_for_team")
+# 
+# NHL_wrapper_api(command="get_franchise", fran_id = 17)
+# NHL_wrapper_api(command="get_total_stats", fran_id = 17)
+# NHL_wrapper_api(command="get_season_records", fran_id = 17)
+# NHL_wrapper_api(command="get_goalie_records", fran_id = 17)
+# NHL_wrapper_api(command="get_skater_records", fran_id = 17)
+# NHL_wrapper_api(command="get_franchise_detail", fran_id = 17)
+# NHL_wrapper_api(command="get_stats_for_team", team_id = 2)
+# 
+# NHL_wrapper_api(command="get_franchise", fran_name = 'Eagles')
+# NHL_wrapper_api(command="get_total_stats", fran_name = 'Eagles')
+# NHL_wrapper_api(command="get_season_records", fran_name = 'Eagles')
+# NHL_wrapper_api(command="get_goalie_records", fran_name = 'Eagles')
+# NHL_wrapper_api(command="get_skater_records", fran_name = 'Eagles')
+# NHL_wrapper_api(command="get_franchise_detail", fran_name = 'Eagles')
+# NHL_wrapper_api(command="get_stats_for_team", team_name = 'Islanders')
 ```
 
+# Exploratory Data Analysis
+
+You should data from at least two endpoints (possibly combining them into one)
+```{r echo=FALSE, eval=TRUE}
+# connect franchise and franchise detail to show imp descriptive information.
+franchise <- as.tbl(NHL_wrapper_api(command="get_franchise"))
+franchise_details <- as.tbl(NHL_wrapper_api(command="get_franchise_detail"))
+
+franchise_joined <- inner_join(franchise, franchise_details, by="id" ) %>%
+  select(id, heroImageUrl, teamCommonName, active ) 
+
+franchise_joined$heroImageUrl[!is.na(franchise_joined$heroImageUrl)] <- sprintf("![](%s){width=100px}", franchise_joined$heroImageUrl)
+franchise_joined %>% 
+  knitr::kable(caption="Franchise Summary Preview") %>% 
+  kable_styling()
+
+```
+
+You should create at least two new variables that are functions of the variables from a data set you use
+
+```{r echo=FALSE, eval=TRUE}
+# calculate % of wins or % losses
+Team_total_stats <- as.tbl(NHL_wrapper_api(command="get_total_stats"))
+#colnames(Team_total_stats)
+Team_total_stats %>% 
+  select(teamName, franchiseId, wins, losses) %>% 
+  group_by(franchiseId, teamName) %>%
+  summarise(totalWins = sum(wins), totalLosses = sum(losses)) %>%
+  mutate(perWins = round(totalWins/(totalWins+totalLosses),2)) %>%
+  arrange(desc(perWins)) %>%
+  knitr::kable(caption="Win/Loss Percentages by Franchise & Teams") %>%
+  kable_styling()
+```
+You should create some contingency tables
+```{r echo=FALSE, eval=TRUE}
+# create contingency table for franchise, Wins, losses, %wins
+skaters <- as.tbl(NHL_wrapper_api(command="get_skater_records"))
+
+skaters$positionCode <- factor(skaters$positionCode)
+skaters$franchiseName <- factor(skaters$franchiseName)
+
+levels(skaters$positionCode) <- c( "Center Forward", "Defenseman", "Left Wing Forward", "Right Wing Forward")
+
+skaters %>%
+  group_by(franchiseName,positionCode) %>%
+  summarise(TotalGoals=sum(goals)) %>%
+  spread(positionCode, TotalGoals) %>%
+  kable() %>%
+  kable_styling()
+
+```
+You should create numerical summaries for some quantitative variables at each setting of some of your categorical variables
+```{r echo=FALSE, eval=TRUE}
+# Numerical Summaries
+
+sakters_table <- function(pos){
+  data <- skaters %>% filter(positionCode == pos) %>% select(goals, gamesPlayed, mostGoalsOneGame, mostGoalsOneSeason)
+  kable(apply(data, 2, summary), caption = paste("Summary Goals by Position", pos), digit = 1) %>%
+  kable_styling()
+}
+
+sakters_table("Center Forward")
+sakters_table("Defenseman")
+sakters_table("Left Wing Forward")
+sakters_table("Right Wing Forward")
+
+```
+
+You should create at least five plots utilizing coloring, grouping, etc. All plots should have nice labels and titles. 
 ```{r}
+# Bar plot, 
+
+skatersData <- skaters %>%
+  group_by(positionCode) %>%
+  summarise(TotalGoals=sum(goals), TotalGames=sum(gamesPlayed))
+
+ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) + 
+  geom_bar(stat="identity") 
+
+# Histogram,
+
+goalie <- as.tbl(NHL_wrapper_api(command="get_goalie_records"))
+
+ggplot(goalie, aes(x = mostSavesOneGame, ..density..)) + 
+  geom_histogram(bins = 20) + 
+  ggtitle("Histogram for Most Save by a Goalie in one game") + 
+  ylab("Density") + 
+  geom_density(col = "red", lwd = 3, adjust = 0.4)
+
+# Box plot, 
+fStats <- NHL_wrapper_api(command="get_total_stats")
+fStats$activeFranchise <- factor(fStats$activeFranchise)
+ggplot(fStats, aes(x = activeFranchise, y = points)) + 
+  geom_boxplot() + 
+  geom_jitter(aes(color = activeFranchise)) + 
+  ggtitle("Boxplot for Points")
+
+# Scatter plot
+ggplot(fStats, aes(x = wins, y = points, group = activeFranchise)) + geom_point(aes(color = activeFranchise)) +     
+   geom_smooth(method = 'lm', color = 'green') + ggtitle("wins vs points")
 
 ```
 
-```{r}
-
-```
