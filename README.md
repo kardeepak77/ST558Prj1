@@ -2826,9 +2826,9 @@ Max.
 
 You should create at least five plots utilizing coloring, grouping, etc.
 All plots should have nice labels and titles.
-![](C:\Docs\NC-State\Course\558-DA~1\Project\project1\git-repo\ST558P~1\README~1/figure-gfm/unnamed-chunk-14-1.png)<!-- -->![](C:\Docs\NC-State\Course\558-DA~1\Project\project1\git-repo\ST558P~1\README~1/figure-gfm/unnamed-chunk-14-2.png)<!-- -->![](C:\Docs\NC-State\Course\558-DA~1\Project\project1\git-repo\ST558P~1\README~1/figure-gfm/unnamed-chunk-14-3.png)<!-- -->![](C:\Docs\NC-State\Course\558-DA~1\Project\project1\git-repo\ST558P~1\README~1/figure-gfm/unnamed-chunk-14-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->![](README_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->![](README_files/figure-gfm/unnamed-chunk-14-3.png)<!-- -->![](README_files/figure-gfm/unnamed-chunk-14-4.png)<!-- -->
 
 sdfd
 
-    ##  [1] 15 28 11 25 16 18 24 20 13  5  6  3  4  2  9 12  7  8 31 10  1 27 22 21 23 29
-    ## [27] 32 33 30 19 37 26 17 38 34 35 14 36
+    ##  [1] 15 28 11 25 16 18 24 20 13  5  6  3  4  2  9 12  7  8 31 10  1 27
+    ## [23] 22 21 23 29 32 33 30 19 37 26 17 38 34 35 14 36
