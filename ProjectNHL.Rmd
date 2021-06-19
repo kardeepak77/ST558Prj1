@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE)
 # Packages
 Folloiwng lsit of packages were used for accessing REST-API endpoints and exploratory data analysis and presentation.
 
-```{r setup, include=FALSE}
+```{r setup, echo=TRUE, include=FALSE}
 library("httr")
 library("jsonlite")
 library("tidyverse")
@@ -32,17 +32,17 @@ library("kableExtra")
 NHLAPI project on github provides REST-API endpoints to access various datapoints for historical NHL games.
 
 For this project, I accessed 7 differnt endpoints from NHLAPI to fetch information about NHL -
-1) Franchise summary
-2) Franchise details
-3) Total stats for franchise
-4) Season records
-5) Skater records
-6) Admin history and retired numbers
-7) Team stats
+1. Franchise summary
+2. Franchise details
+3. Total stats for franchise
+4. Season records
+5. Skater records
+6. Admin history and retired numbers
+7. Team stats
 
 GET function from httr package was used for fetching data through REST-API. Using content and fromJSON fuction data received was converted into r dataframe object.
 
-```{r}
+```{r echo=TRUE}
 # Base url to access NHLAPI 
 get_baseURL <- function() { return("https://records.nhl.com/site/api") }
 
@@ -66,7 +66,7 @@ get_all_franchise <- function() {
 ## Fetch data by Id or Name 
 By default NHL REST-APIs return data for all franchise or team. Using helpfer functions I created a ability for user to provide Id or Name to fetch data for sepcific franchise/team if desired. If no Id or Name is passed query functions will return data for all franchise or teams.
 
-```{r}
+```{r echo=TRUE}
 # Function returns id for franchise by matching team common name to the fran_name argument provided. If team name was not found it will return -1.
 get_franchise_id <- function(fran_id=NA, fran_name=NA) {
   retValue <- NA
@@ -88,7 +88,7 @@ get_franchise_id <- function(fran_id=NA, fran_name=NA) {
 ```
 
 
-```{r echo=FALSE, eval=TRUE}
+```{r}
 
 
 #Test Code
@@ -138,7 +138,7 @@ get_team_id <- function(team_id=NA, team_name=NA) {
 With the help of wrapper funcions above, created a R function to fetch data from deisred NHL Records endpoint using either franchise id or team common name. If franchise id or team common name was not proivided api will return data from all franchises.
 Simillar set of fucntions were used to contract with NHL team stats RES-API end point.
 
-```{r}
+```{r echo=TRUE}
 # Get NHL records as data.frame for given team by id/name or all. If team not found then empty data.frame is returned.
 get_NHL_records <- function(tab_name, fran_id=NA, fran_name=NA) {
 
@@ -239,7 +239,7 @@ get_NHL_stats <- function(team_id=NA, team_name=NA) {
 
 ## Wrapper function
 Using Switch-Case, created wrapper function for providing simplicity for fetching data from all NHL REST-API endpoints relvant to this project, 
-```{r}
+```{r echo=TRUE}
 
 NHL_wrapper_api <- function(command, fran_id=NA, fran_name=NA, team_id=NA, team_name=NA) {
   result = switch(  
@@ -301,7 +301,7 @@ NHL_wrapper_api <- function(command, fran_id=NA, fran_name=NA, team_id=NA, team_
 To explore data, started with combining data from franchise summary and detail using inner_join to get basic tabular view of all franchises.
 Rendered such summary table using kable function from knitr.
 
-```{r}
+```{r echo=TRUE}
 # Fetch franchise and franchise detail 
 franchise <- as.tbl(NHL_wrapper_api(command="get_franchise"))
 franchise_details <- as.tbl(NHL_wrapper_api(command="get_franchise_detail"))
@@ -324,7 +324,7 @@ franchise_joined %>%
 There are many ways to compute/add more variables to the dataset you are working with. I used group_by and summarise functions toc create two new varaibles totalWins and toalLosses for each unique combinatoin of Franchise Id & Team.
 Also computed percentage wins for each such combination of Franchise Id & Team using total wins and total losses. 
 
-```{r echo=FALSE, eval=TRUE}
+```{r echo=TRUE}
 # calculate % of wins or % losses
 Team_total_stats <- as.tbl(NHL_wrapper_api(command="get_total_stats"))
 
@@ -343,7 +343,7 @@ Team_total_stats %>%
 Contengency tables were created for Total goals scored by saketers by his position and franchise Id. 
 2 seperate tables were cerated by considering active and inactive players.
 
-```{r echo=FALSE, eval=TRUE}
+```{r echo=TRUE}
 # create contingency table for franchise, Wins, losses, %wins
 skaters <- as.tbl(NHL_wrapper_api(command="get_skater_records"))
 
@@ -373,7 +373,7 @@ skaters %>%
 
 ## Numerical summeries
 Numerical summeries were created for toals, gamesPlayed, mostGoalsOneGame, mostGoalsOneSeason by skaters with differnt positions as follows -
-```{r echo=FALSE, eval=TRUE}
+```{r echo=TRUE}
 # Numerical Summaries
 
 sakters_table <- function(pos){
@@ -389,9 +389,9 @@ sakters_table("Right Wing Forward")
 
 ```
 
-## Plots
+# Plots
 You should create at least five plots utilizing coloring, grouping, etc. All plots should have nice labels and titles. 
-```{r}
+```{r echo=TRUE}
 # Bar plot, 
 
 skatersData <- skaters %>%

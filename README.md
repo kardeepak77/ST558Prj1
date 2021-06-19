@@ -18,7 +18,7 @@ June 13, 2021
     -   [Creating new variables](#creating-new-variables)
     -   [Contingency tables](#contingency-tables)
     -   [Numerical summeries](#numerical-summeries)
-    -   [Plots](#plots)
+-   [Plots](#plots)
 
 # Introduction
 
@@ -41,13 +41,34 @@ NHLAPI project on github provides REST-API endpoints to access various
 datapoints for historical NHL games.
 
 For this project, I accessed 7 differnt endpoints from NHLAPI to fetch
-information about NHL - 1) Franchise summary 2) Franchise details 3)
-Total stats for franchise 4) Season records 5) Skater records 6) Admin
-history and retired numbers 7) Team stats
+information about NHL - 1. Franchise summary 2. Franchise details 3.
+Total stats for franchise 4. Season records 5. Skater records 6. Admin
+history and retired numbers 7. Team stats
 
 GET function from httr package was used for fetching data through
 REST-API. Using content and fromJSON fuction data received was converted
 into r dataframe object.
+
+``` r
+# Base url to access NHLAPI 
+get_baseURL <- function() { return("https://records.nhl.com/site/api") }
+
+# helper function to fetch data from REST-API endpoint and conert it to dataframe.
+fetch_DF <- function(api_url) {
+  get_response <- GET(api_url)
+  json_contents <- content(get_response, "text")
+  list_res <- fromJSON(json_contents, flatten = TRUE)
+  return(list_res)
+}
+
+# Get All Franchise
+get_all_franchise <- function() {
+  tab_name <- "franchise"
+  full_url <- paste0(get_baseURL(), "/", tab_name)
+  franchise_res <- fetch_DF(full_url)
+  franchise_res$data
+}
+```
 
 ## Fetch data by Id or Name
 
@@ -55,6 +76,27 @@ By default NHL REST-APIs return data for all franchise or team. Using
 helpfer functions I created a ability for user to provide Id or Name to
 fetch data for sepcific franchise/team if desired. If no Id or Name is
 passed query functions will return data for all franchise or teams.
+
+``` r
+# Function returns id for franchise by matching team common name to the fran_name argument provided. If team name was not found it will return -1.
+get_franchise_id <- function(fran_id=NA, fran_name=NA) {
+  retValue <- NA
+  
+  if(!is.na(fran_id)){
+    return(fran_id)
+  } else if(!is.na(fran_name)) {
+    #get id from name
+    franchise <- get_all_franchise() %>% filter(teamCommonName == fran_name)
+    if(nrow(franchise) == 1) {
+      retValue <- franchise$id
+    } else {
+      #we couldn't find the teamid for team name specified.
+      retValue <- -1
+    }
+  }
+  return(retValue)
+}
+```
 
 ## Fetching datafrom NHL Records API
 
@@ -64,10 +106,68 @@ common name. If franchise id or team common name was not proivided api
 will return data from all franchises. Simillar set of fucntions were
 used to contract with NHL team stats RES-API end point.
 
+``` r
+# Get NHL records as data.frame for given team by id/name or all. If team not found then empty data.frame is returned.
+get_NHL_records <- function(tab_name, fran_id=NA, fran_name=NA) {
+
+  full_url <- ""
+  id_filter <- ""
+  id <- get_franchise_id(fran_id, fran_name)
+  
+  if(!is.na(id)) {
+    if(id != -1) {
+    # fetch franchise information for given team id.
+      if(tab_name == "franchise" | tab_name == "franchise-detail") {
+        id_filter <- paste0("cayenneExp=id=",id)
+      } else {
+        id_filter <- paste0("cayenneExp=franchiseId=",id)
+      }
+      full_url <- paste0(get_baseURL(), "/", tab_name, "?", id_filter)
+    } else {
+      # Couldn't fine franchise by the name provided.
+      return(data.frame())
+    }
+  } else {
+    #fetch franchise information for all teams
+    full_url <- paste0(get_baseURL(), "/", tab_name)
+  }
+  
+  #fetch NHL records
+  records_res <- fetch_DF(full_url)
+  return(records_res$data)
+}
+```
+
 ## Wrapper function
 
 Using Switch-Case, created wrapper function for providing simplicity for
 fetching data from all NHL REST-API endpoints relvant to this project,
+
+``` r
+NHL_wrapper_api <- function(command, fran_id=NA, fran_name=NA, team_id=NA, team_name=NA) {
+  result = switch(  
+      command,  
+      "get_franchise"= get_NHL_records("franchise", fran_id, fran_name),  
+      "get_total_stats"= get_NHL_records("franchise-team-totals", fran_id, fran_name),  
+      "get_season_records"= get_NHL_records("franchise-season-records", fran_id, fran_name),  
+      "get_goalie_records"= get_NHL_records("franchise-goalie-records", fran_id, fran_name),
+      "get_skater_records"= get_NHL_records("franchise-skater-records", fran_id, fran_name),
+      "get_franchise_detail"= get_NHL_records("franchise-detail", fran_id, fran_name),
+      "get_stats_for_team"=get_NHL_stats(team_id, team_name),
+      print0("command not found, available commands are = \n",
+             "get_franchise",
+             "get_total_stats",
+             "get_season_records",
+             "get_goalie_records",
+             "get_skater_records",
+             "get_franchise_detail",
+             "get_team_stats_for_season",
+             "get_stats_for_team"
+             )
+  )
+  return(result)
+}
+```
 
 # Exploratory Data Analysis
 
@@ -76,6 +176,24 @@ fetching data from all NHL REST-API endpoints relvant to this project,
 To explore data, started with combining data from franchise summary and
 detail using inner\_join to get basic tabular view of all franchises.
 Rendered such summary table using kable function from knitr.
+
+``` r
+# Fetch franchise and franchise detail 
+franchise <- as.tbl(NHL_wrapper_api(command="get_franchise"))
+franchise_details <- as.tbl(NHL_wrapper_api(command="get_franchise_detail"))
+
+# Combine franchise and franchise detail using inner join.
+franchise_joined <- inner_join(franchise, franchise_details, by="id" ) %>%
+  select(id, heroImageUrl, teamCommonName, active ) 
+
+# make image urls renderable for franchise.
+franchise_joined$heroImageUrl[!is.na(franchise_joined$heroImageUrl)] <- sprintf("![](%s){width=100px}", franchise_joined$heroImageUrl)
+
+#print 
+franchise_joined %>% 
+  knitr::kable(caption="Franchise Summary Preview") %>% 
+  kable_styling()
+```
 
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
@@ -655,6 +773,22 @@ new varaibles totalWins and toalLosses for each unique combinatoin of
 Franchise Id & Team. Also computed percentage wins for each such
 combination of Franchise Id & Team using total wins and total losses.
 
+``` r
+# calculate % of wins or % losses
+Team_total_stats <- as.tbl(NHL_wrapper_api(command="get_total_stats"))
+
+#colnames(Team_total_stats)
+Team_total_stats %>% 
+  select(teamName, franchiseId, wins, losses) %>% 
+  group_by(franchiseId, teamName) %>%
+  summarise(totalWins = sum(wins), totalLosses = sum(losses)) %>%
+  mutate(perWins = round(totalWins/(totalWins+totalLosses),2)) %>%
+  arrange(desc(perWins)) %>%
+  head() %>%
+  knitr::kable(caption="Win/Loss Percentages by Franchise & Teams") %>%
+  kable_styling()
+```
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Win/Loss Percentages by Franchise & Teams
@@ -790,6 +924,25 @@ Contengency tables were created for Total goals scored by saketers by
 his position and franchise Id. 2 seperate tables were cerated by
 considering active and inactive players.
 
+``` r
+# create contingency table for franchise, Wins, losses, %wins
+skaters <- as.tbl(NHL_wrapper_api(command="get_skater_records"))
+
+skaters$positionCode <- factor(skaters$positionCode)
+skaters$franchiseName <- factor(skaters$franchiseName)
+
+levels(skaters$positionCode) <- c("Center Forward", "Defenseman", "Left Wing Forward", "Right Wing Forward")
+
+skaters %>%
+  filter(activePlayer == TRUE) %>%
+  group_by(franchiseName, positionCode) %>%
+  summarise(TotalGoals=sum(goals)) %>%
+  spread(positionCode, TotalGoals) %>%
+  head() %>%
+  knitr::kable(caption="Active Players: Goal Counts by FranchiseID and Position") %>%
+  kable_styling()
+```
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Active Players: Goal Counts by FranchiseID and Position
@@ -918,6 +1071,18 @@ Carolina Hurricanes
 </tr>
 </tbody>
 </table>
+
+``` r
+skaters %>%
+  filter(activePlayer == FALSE) %>%
+  group_by(franchiseName,positionCode) %>%
+  summarise(TotalGoals=sum(goals)) %>%
+  spread(positionCode, TotalGoals) %>%
+  head() %>%
+  knitr::kable(caption="Inactive Players: Goal Counts by FranchiseID and Position") %>%
+  kable_styling()
+```
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Inactive Players: Goal Counts by FranchiseID and Position
@@ -1052,6 +1217,19 @@ Calgary Flames
 Numerical summeries were created for toals, gamesPlayed,
 mostGoalsOneGame, mostGoalsOneSeason by skaters with differnt positions
 as follows -
+
+``` r
+# Numerical Summaries
+
+sakters_table <- function(pos){
+  data <- skaters %>% filter(positionCode == pos) %>% select(goals, gamesPlayed, mostGoalsOneGame, mostGoalsOneSeason)
+  kable(apply(data, 2, summary), caption = paste("Summary Goals by Position", pos), digit = 1) %>%
+  kable_styling()
+}
+
+sakters_table("Center Forward")
+```
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Summary Goals by Position Center Forward
@@ -1179,6 +1357,11 @@ Max.
 </tr>
 </tbody>
 </table>
+
+``` r
+sakters_table("Defenseman")
+```
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Summary Goals by Position Defenseman
@@ -1306,6 +1489,11 @@ Max.
 </tr>
 </tbody>
 </table>
+
+``` r
+sakters_table("Left Wing Forward")
+```
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Summary Goals by Position Left Wing Forward
@@ -1433,6 +1621,11 @@ Max.
 </tr>
 </tbody>
 </table>
+
+``` r
+sakters_table("Right Wing Forward")
+```
+
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Summary Goals by Position Right Wing Forward
@@ -1561,11 +1754,57 @@ Max.
 </tbody>
 </table>
 
-## Plots
+# Plots
 
 You should create at least five plots utilizing coloring, grouping, etc.
 All plots should have nice labels and titles.
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->![](README_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->![](README_files/figure-gfm/unnamed-chunk-14-3.png)<!-- -->![](README_files/figure-gfm/unnamed-chunk-14-4.png)<!-- -->
+
+``` r
+# Bar plot, 
+
+skatersData <- skaters %>%
+  group_by(positionCode) %>%
+  summarise(TotalGoals=sum(goals), TotalGames=sum(gamesPlayed))
+
+ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) + 
+  geom_bar(stat="identity") 
+```
+
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+``` r
+# Histogram,
+
+goalie <- as.tbl(NHL_wrapper_api(command="get_goalie_records"))
+
+ggplot(goalie, aes(x = mostSavesOneGame, ..density..)) + 
+  geom_histogram(bins = 20) + 
+  ggtitle("Histogram for Most Save by a Goalie in one game") + 
+  ylab("Density") + 
+  geom_density(col = "red", lwd = 3, adjust = 0.4)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
+
+``` r
+# Box plot, 
+fStats <- NHL_wrapper_api(command="get_total_stats")
+fStats$activeFranchise <- factor(fStats$activeFranchise)
+ggplot(fStats, aes(x = activeFranchise, y = points)) + 
+  geom_boxplot() + 
+  geom_jitter(aes(color = activeFranchise)) + 
+  ggtitle("Boxplot for Points")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-14-3.png)<!-- -->
+
+``` r
+# Scatter plot
+ggplot(fStats, aes(x = wins, y = points, group = activeFranchise)) + geom_point(aes(color = activeFranchise)) +     
+   geom_smooth(method = 'lm', color = 'green') + ggtitle("wins vs points")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-14-4.png)<!-- -->
 
 sdfd
 
