@@ -133,9 +133,9 @@ get_team_id <- function(team_id=NA, team_name=NA) {
 # get_team_id(team_name="Rangers")
 ```
 
-## Fetching datafrom NHL Records API
+## Function for fetching data of NHL records
 
-With the help of wrapper funcions above, created a R function to fetch data from deisred NHL Records endpoint using either franchise id or team common name. If franchise id or team common name was not proivided api will return data from all franchises.
+With the help of funcions above, created a R function to fetch data from deisred NHL Records endpoint using either franchise id or team common name. If franchise id or team common name was not proivided api will return data from all franchises.
 Simillar set of fucntions were used to contract with NHL team stats RES-API end point.
 
 ```{r echo=TRUE}
@@ -390,7 +390,10 @@ sakters_table("Right Wing Forward")
 ```
 
 # Plots
-You should create at least five plots utilizing coloring, grouping, etc. All plots should have nice labels and titles. 
+ggplot packages supports creating nice plots to describe data.
+
+## Bar plots
+For created Bar plot of totals goals by skater's position used geom_bar function from ggplot with stat=identity to used y value provided for bar hight.
 ```{r echo=TRUE}
 # Bar plot, 
 
@@ -399,8 +402,11 @@ skatersData <- skaters %>%
   summarise(TotalGoals=sum(goals), TotalGames=sum(gamesPlayed))
 
 ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) + 
-  geom_bar(stat="identity") 
+  geom_bar(stat="identity") + 
+  ggtitle("Bar Plot: Total Goals by PositionCode of Skaters")
+```
 
+```{r echo=TRUE}
 # Histogram,
 
 goalie <- as.tbl(NHL_wrapper_api(command="get_goalie_records"))

@@ -9,8 +9,8 @@ June 13, 2021
     -   [Contract REST-API and create
         dataframe](#contract-rest-api-and-create-dataframe)
     -   [Fetch data by Id or Name](#fetch-data-by-id-or-name)
-    -   [Fetching datafrom NHL Records
-        API](#fetching-datafrom-nhl-records-api)
+    -   [Function for fetching data of NHL
+        records](#function-for-fetching-data-of-nhl-records)
     -   [Wrapper function](#wrapper-function)
 -   [Exploratory Data Analysis](#exploratory-data-analysis)
     -   [Combine Franchise Summary and Details in single summary
@@ -19,6 +19,7 @@ June 13, 2021
     -   [Contingency tables](#contingency-tables)
     -   [Numerical summeries](#numerical-summeries)
 -   [Plots](#plots)
+    -   [Bar plots](#bar-plots)
 
 # Introduction
 
@@ -98,13 +99,13 @@ get_franchise_id <- function(fran_id=NA, fran_name=NA) {
 }
 ```
 
-## Fetching datafrom NHL Records API
+## Function for fetching data of NHL records
 
-With the help of wrapper funcions above, created a R function to fetch
-data from deisred NHL Records endpoint using either franchise id or team
-common name. If franchise id or team common name was not proivided api
-will return data from all franchises. Simillar set of fucntions were
-used to contract with NHL team stats RES-API end point.
+With the help of funcions above, created a R function to fetch data from
+deisred NHL Records endpoint using either franchise id or team common
+name. If franchise id or team common name was not proivided api will
+return data from all franchises. Simillar set of fucntions were used to
+contract with NHL team stats RES-API end point.
 
 ``` r
 # Get NHL records as data.frame for given team by id/name or all. If team not found then empty data.frame is returned.
@@ -1756,8 +1757,13 @@ Max.
 
 # Plots
 
-You should create at least five plots utilizing coloring, grouping, etc.
-All plots should have nice labels and titles.
+ggplot packages supports creating nice plots to describe data.
+
+## Bar plots
+
+For created Bar plot of totals goals by skater’s position used geom\_bar
+function from ggplot with stat=identity to used y value provided for bar
+hight.
 
 ``` r
 # Bar plot, 
@@ -1767,10 +1773,11 @@ skatersData <- skaters %>%
   summarise(TotalGoals=sum(goals), TotalGames=sum(gamesPlayed))
 
 ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) + 
-  geom_bar(stat="identity") 
+  geom_bar(stat="identity") + 
+  ggtitle("Bar Plot: Total Goals by PositionCode of Skaters")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ``` r
 # Histogram,
@@ -1784,7 +1791,7 @@ ggplot(goalie, aes(x = mostSavesOneGame, ..density..)) +
   geom_density(col = "red", lwd = 3, adjust = 0.4)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 # Box plot, 
@@ -1796,7 +1803,7 @@ ggplot(fStats, aes(x = activeFranchise, y = points)) +
   ggtitle("Boxplot for Points")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
 
 ``` r
 # Scatter plot
@@ -1804,7 +1811,7 @@ ggplot(fStats, aes(x = wins, y = points, group = activeFranchise)) + geom_point(
    geom_smooth(method = 'lm', color = 'green') + ggtitle("wins vs points")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-3.png)<!-- -->
 
 sdfd
 
