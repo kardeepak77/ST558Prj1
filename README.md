@@ -20,20 +20,21 @@ June 13, 2021
     -   [Numerical summeries](#numerical-summeries)
 -   [Plots](#plots)
     -   [Bar plots](#bar-plots)
+    -   [Histogram plots](#histogram-plots)
     -   [Box plot](#box-plot)
     -   [Scatter plot](#scatter-plot)
 
 # Introduction
 
-This vignette is an introduction on how to query REST-API endpoins using
-R and perform exploratory data analysis using various R packages. We’ll
-use be using the NHL REST-API endpoints which can be contracted by
-folloiwng instruciton on
+This vignette is an introduction on how to query REST-API end points
+using R and perform exploratory data analysis using various R packages.
+We’ll use be using the NHL REST-API endpoints which can be contracted by
+following instruction on
 [https://gitlab.com/dword4/nhlapi/-/blob/master/records-api.md](NHL%20Records%20API)
 
 # Packages
 
-Folloiwng lsit of packages were used for accessing REST-API endpoints
+Following list of packages were used for accessing REST-API endpoints
 and exploratory data analysis and presentation.
 
 # Accessing NHL Data
@@ -43,14 +44,14 @@ and exploratory data analysis and presentation.
 NHLAPI project on github provides REST-API endpoints to access various
 datapoints for historical NHL games.
 
-For this project, I accessed 7 differnt endpoints from NHLAPI to fetch
+For this project, I accessed 7 different endpoints from NHLAPI to fetch
 information about NHL - 1. Franchise summary 2. Franchise details 3.
 Total stats for franchise 4. Season records 5. Skater records 6. Admin
 history and retired numbers 7. Team stats
 
 GET function from httr package was used for fetching data through
-REST-API. Using content and fromJSON fuction data received was converted
-into r dataframe object.
+REST-API. Using content and from JSON function data received was
+converted into r dataframe object.
 
 ``` r
 # Base url to access NHLAPI 
@@ -76,8 +77,8 @@ get_all_franchise <- function() {
 ## Fetch data by Id or Name
 
 By default NHL REST-APIs return data for all franchise or team. Using
-helpfer functions I created a ability for user to provide Id or Name to
-fetch data for sepcific franchise/team if desired. If no Id or Name is
+helper functions I created a ability for user to provide Id or Name to
+fetch data for specific franchise/team if desired. If no Id or Name is
 passed query functions will return data for all franchise or teams.
 
 ``` r
@@ -103,11 +104,11 @@ get_franchise_id <- function(fran_id=NA, fran_name=NA) {
 
 ## Function for fetching data of NHL records
 
-With the help of funcions above, created a R function to fetch data from
-deisred NHL Records endpoint using either franchise id or team common
-name. If franchise id or team common name was not proivided api will
-return data from all franchises. Simillar set of fucntions were used to
-contract with NHL team stats RES-API end point.
+With the help of functions above, created a R function to fetch data
+from desired NHL Records endpoint using either franchise id or team
+common name. If franchise id or team common name was not provided api
+will return data from all franchises. Similar set of functions were used
+to contract with NHL team stats RES-API end point.
 
 ``` r
 # Get NHL records as data.frame for given team by id/name or all. If team not found then empty data.frame is returned.
@@ -144,7 +145,7 @@ get_NHL_records <- function(tab_name, fran_id=NA, fran_name=NA) {
 ## Wrapper function
 
 Using Switch-Case, created wrapper function for providing simplicity for
-fetching data from all NHL REST-API endpoints relvant to this project,
+fetching data from all NHL REST-API endpoints relevant to this project,
 
 ``` r
 NHL_wrapper_api <- function(command, fran_id=NA, fran_name=NA, team_id=NA, team_name=NA) {
@@ -771,8 +772,8 @@ TRUE
 ## Creating new variables
 
 There are many ways to compute/add more variables to the dataset you are
-working with. I used group\_by and summarise functions toc create two
-new varaibles totalWins and toalLosses for each unique combinatoin of
+working with. I used group\_by and summarize functions toc create two
+new variables totalWins and toalLosses for each unique combination of
 Franchise Id & Team. Also computed percentage wins for each such
 combination of Franchise Id & Team using total wins and total losses.
 
@@ -923,9 +924,9 @@ Boston Bruins
 
 ## Contingency tables
 
-Contengency tables were created for Total goals scored by saketers by
-his position and franchise Id. 2 seperate tables were cerated by
-considering active and inactive players.
+Contingency tables were created for Total goals scored by skaters by his
+position and franchise Id. 2 separate tables were created by considering
+active and inactive players.
 
 ``` r
 # create contingency table for franchise, Wins, losses, %wins
@@ -1217,8 +1218,8 @@ Calgary Flames
 
 ## Numerical summeries
 
-Numerical summeries were created for toals, gamesPlayed,
-mostGoalsOneGame, mostGoalsOneSeason by skaters with differnt positions
+Numerical summaries were created for toals, gamesPlayed,
+mostGoalsOneGame, mostGoalsOneSeason by skaters with different positions
 as follows -
 
 ``` r
@@ -1765,7 +1766,7 @@ ggplot packages supports creating nice plots to describe data.
 
 For created Bar plot of totals goals by skater’s position used geom\_bar
 function from ggplot with stat=identity to used y value provided for bar
-hight.
+height.
 
 ``` r
 skatersData <- skaters %>%
@@ -1777,9 +1778,12 @@ ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) +
   ggtitle("Bar Plot: Total Goals by PositionCode of Skaters")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- --> \#\#
-Histogram Density plot is created using geom\_histogram for mostSaves in
-one game by a goalie.
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+## Histogram plots
+
+Density plot is created using geom\_histogram for mostSaves in one game
+by a goalie.
 
 ``` r
 # fetch goalie data
@@ -1803,7 +1807,7 @@ ggplot(goalie_msg, aes(x = mostSavesOneGame, ..density..)) +
 ![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Using facet\_wrap layer density plot of active and inactive player for
-mostSaves in one game by a goalieis created as follows -
+mostSaves in one game by a goalies created as follows -
 
 ``` r
 ggplot(goalie_msg, aes(x = mostSavesOneGame, ..density..)) + 
@@ -1825,6 +1829,6 @@ geom\_boxplot layer.
 
 ## Scatter plot
 
-geom\_pointlayer function allows creating scatter plot with ggplot. Her
-is active and inactive frantise wins and fit linear model line in it.
+geom\_point layer function allows creating scatter plot with ggplot. Her
+is active and inactive franchise wins and fit linear model line in it.
 ![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
