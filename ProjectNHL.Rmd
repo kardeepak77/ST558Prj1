@@ -394,9 +394,8 @@ ggplot packages supports creating nice plots to describe data.
 
 ## Bar plots
 For created Bar plot of totals goals by skater's position used geom_bar function from ggplot with stat=identity to used y value provided for bar hight.
-```{r echo=TRUE}
-# Bar plot, 
 
+```{r echo=TRUE}
 skatersData <- skaters %>%
   group_by(positionCode) %>%
   summarise(TotalGoals=sum(goals), TotalGames=sum(gamesPlayed))
@@ -405,35 +404,63 @@ ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) +
   geom_bar(stat="identity") + 
   ggtitle("Bar Plot: Total Goals by PositionCode of Skaters")
 ```
+## Historgram
+Density plot is created using geom_histogram for mostSaves in one game by a goalie.
 
 ```{r echo=TRUE}
-# Histogram,
-
+# fetch goalie data
 goalie <- as.tbl(NHL_wrapper_api(command="get_goalie_records"))
+goalie
+#keep only mostSavesOneGame column in it
+goalie_msg <- select(goalie, mostSavesOneGame, activePlayer)
 
-ggplot(goalie, aes(x = mostSavesOneGame, ..density..)) + 
+goalie_msg$activePlayer <- factor(goalie_msg$activePlayer)
+levels(goalie_msg$activePlayer) <- c("Inactive", "Active")
+#remove NA rows
+goalie_msg <- na.omit(goalie_msg)
+
+ggplot(goalie_msg, aes(x = mostSavesOneGame, ..density..)) + 
   geom_histogram(bins = 20) + 
   ggtitle("Histogram for Most Save by a Goalie in one game") + 
   ylab("Density") + 
   geom_density(col = "red", lwd = 3, adjust = 0.4)
+```
 
-# Box plot, 
+Using facet_wrap layer density plot of active and inactive player for mostSaves in one game by a goalieis created as follows -
+
+```{r echo=TRUE}
+ggplot(goalie_msg, aes(x = mostSavesOneGame, ..density..)) + 
+  geom_histogram(bins = 20) + 
+  facet_wrap(~activePlayer) + 
+  ggtitle("2 Histogram for Most Save by a Active vs InActive Goalie in one game") + 
+  ylab("Density") + 
+  geom_density(col = "red", lwd = 3, adjust = 0.4)
+
+```
+
+## Box plot
+Box plot of points for active and inactive franchise is created with geom_boxplot layer.
+
+```{r}
+
 fStats <- NHL_wrapper_api(command="get_total_stats")
 fStats$activeFranchise <- factor(fStats$activeFranchise)
+levels(fStats$activeFranchise) <- c("Inactive", "Active")
 ggplot(fStats, aes(x = activeFranchise, y = points)) + 
   geom_boxplot() + 
   geom_jitter(aes(color = activeFranchise)) + 
   ggtitle("Boxplot for Points")
-
-# Scatter plot
-ggplot(fStats, aes(x = wins, y = points, group = activeFranchise)) + geom_point(aes(color = activeFranchise)) +     
-   geom_smooth(method = 'lm', color = 'green') + ggtitle("wins vs points")
-
 ```
 
-sdfd
+## Scatter plot
+geom_pointlayer function allows creating scatter plot with ggplot.
+Her is active and inactive frantise wins and fit linear model line in it.
 ```{r}
-unique(goalie$franchiseId)
+# 
+ggplot(fStats, aes(x = wins, y = points, group = activeFranchise)) + 
+  geom_point(aes(color = activeFranchise)) + 
+  geom_smooth(method = 'lm', color = 'green') + 
+  ggtitle("wins vs points")
 
 ```
 

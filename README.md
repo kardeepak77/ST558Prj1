@@ -20,6 +20,8 @@ June 13, 2021
     -   [Numerical summeries](#numerical-summeries)
 -   [Plots](#plots)
     -   [Bar plots](#bar-plots)
+    -   [Box plot](#box-plot)
+    -   [Scatter plot](#scatter-plot)
 
 # Introduction
 
@@ -1766,8 +1768,6 @@ function from ggplot with stat=identity to used y value provided for bar
 hight.
 
 ``` r
-# Bar plot, 
-
 skatersData <- skaters %>%
   group_by(positionCode) %>%
   summarise(TotalGoals=sum(goals), TotalGames=sum(gamesPlayed))
@@ -1777,43 +1777,81 @@ ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) +
   ggtitle("Bar Plot: Total Goals by PositionCode of Skaters")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-41-1.png)<!-- --> \#\#
+Historgram Density plot is created using geom\_histogram for mostSaves
+in one game by a goalie.
 
 ``` r
-# Histogram,
-
+# fetch goalie data
 goalie <- as.tbl(NHL_wrapper_api(command="get_goalie_records"))
+goalie
+```
 
-ggplot(goalie, aes(x = mostSavesOneGame, ..density..)) + 
+    ## # A tibble: 1,078 x 29
+    ##       id activePlayer firstName franchiseId franchiseName    gameTypeId
+    ##    <int> <lgl>        <chr>           <int> <chr>                 <int>
+    ##  1   235 FALSE        Don                15 Dallas Stars              2
+    ##  2   236 FALSE        Bob                28 Arizona Coyotes           2
+    ##  3   237 FALSE        Tony               11 Chicago Blackha~          2
+    ##  4   238 FALSE        Grant              25 Edmonton Oilers           2
+    ##  5   239 FALSE        Ron                16 Philadelphia Fl~          2
+    ##  6   240 FALSE        Curtis             18 St. Louis Blues           2
+    ##  7   241 FALSE        Olie               24 Washington Capi~          2
+    ##  8   242 FALSE        Mike               18 St. Louis Blues           2
+    ##  9   243 FALSE        Kirk               20 Vancouver Canuc~          2
+    ## 10   244 FALSE        Gilles             13 Cleveland Barons          2
+    ## # ... with 1,068 more rows, and 23 more variables: gamesPlayed <int>,
+    ## #   lastName <chr>, losses <int>, mostGoalsAgainstDates <chr>,
+    ## #   mostGoalsAgainstOneGame <int>, mostSavesDates <chr>,
+    ## #   mostSavesOneGame <int>, mostShotsAgainstDates <chr>,
+    ## #   mostShotsAgainstOneGame <int>, mostShutoutsOneSeason <int>,
+    ## #   mostShutoutsSeasonIds <chr>, mostWinsOneSeason <int>,
+    ## #   mostWinsSeasonIds <chr>, overtimeLosses <int>, playerId <int>,
+    ## #   positionCode <chr>, rookieGamesPlayed <int>, rookieShutouts <int>,
+    ## #   rookieWins <int>, seasons <int>, shutouts <int>, ties <int>,
+    ## #   wins <int>
+
+``` r
+#keep only mostSavesOneGame column in it
+goalie_msg <- select(goalie, mostSavesOneGame, activePlayer)
+
+goalie_msg$activePlayer <- factor(goalie_msg$activePlayer)
+levels(goalie_msg$activePlayer) <- c("Inactive", "Active")
+#remove NA rows
+goalie_msg <- na.omit(goalie_msg)
+
+ggplot(goalie_msg, aes(x = mostSavesOneGame, ..density..)) + 
   geom_histogram(bins = 20) + 
   ggtitle("Histogram for Most Save by a Goalie in one game") + 
   ylab("Density") + 
   geom_density(col = "red", lwd = 3, adjust = 0.4)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+
+Using facet\_wrap layer density plot of active and inactive player for
+mostSaves in one game by a goalieis created as follows -
 
 ``` r
-# Box plot, 
-fStats <- NHL_wrapper_api(command="get_total_stats")
-fStats$activeFranchise <- factor(fStats$activeFranchise)
-ggplot(fStats, aes(x = activeFranchise, y = points)) + 
-  geom_boxplot() + 
-  geom_jitter(aes(color = activeFranchise)) + 
-  ggtitle("Boxplot for Points")
+ggplot(goalie_msg, aes(x = mostSavesOneGame, ..density..)) + 
+  geom_histogram(bins = 20) + 
+  facet_wrap(~activePlayer) + 
+  ggtitle("2 Histogram for Most Save by a Active vs InActive Goalie in one game") + 
+  ylab("Density") + 
+  geom_density(col = "red", lwd = 3, adjust = 0.4)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
 
-``` r
-# Scatter plot
-ggplot(fStats, aes(x = wins, y = points, group = activeFranchise)) + geom_point(aes(color = activeFranchise)) +     
-   geom_smooth(method = 'lm', color = 'green') + ggtitle("wins vs points")
-```
+## Box plot
 
-![](README_files/figure-gfm/unnamed-chunk-17-3.png)<!-- -->
+Box plot of points for active and inactive franchise is created with
+geom\_boxplot layer.
 
-sdfd
+![](README_files/figure-gfm/unnamed-chunk-44-1.png)<!-- -->
 
-    ##  [1] 15 28 11 25 16 18 24 20 13  5  6  3  4  2  9 12  7  8 31 10  1 27
-    ## [23] 22 21 23 29 32 33 30 19 37 26 17 38 34 35 14 36
+## Scatter plot
+
+geom\_pointlayer function allows creating scatter plot with ggplot. Her
+is active and inactive frantise wins and fit linear model line in it.
+![](README_files/figure-gfm/unnamed-chunk-45-1.png)<!-- -->
