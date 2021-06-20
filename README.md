@@ -37,6 +37,13 @@ following instruction on
 Following list of packages were used for accessing REST-API endpoints
 and exploratory data analysis and presentation.
 
+``` r
+library("httr")
+library("jsonlite")
+library("tidyverse")
+library("kableExtra")
+```
+
 # Accessing NHL Data
 
 ## Contract REST-API and create dataframe
