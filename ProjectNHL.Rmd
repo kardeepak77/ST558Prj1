@@ -410,7 +410,7 @@ Density plot is created using geom_histogram for mostSaves in one game by a goal
 ```{r echo=TRUE}
 # fetch goalie data
 goalie <- as.tbl(NHL_wrapper_api(command="get_goalie_records"))
-goalie
+
 #keep only mostSavesOneGame column in it
 goalie_msg <- select(goalie, mostSavesOneGame, activePlayer)
 
