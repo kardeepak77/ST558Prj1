@@ -1778,8 +1778,8 @@ ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) +
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- --> \#\#
-Historgram Density plot is created using geom\_histogram for mostSaves
-in one game by a goalie.
+Histogram Density plot is created using geom\_histogram for mostSaves in
+one game by a goalie.
 
 ``` r
 # fetch goalie data

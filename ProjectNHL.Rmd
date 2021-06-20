@@ -404,7 +404,7 @@ ggplot(skatersData, aes(x = positionCode, y=TotalGoals )) +
   geom_bar(stat="identity") + 
   ggtitle("Bar Plot: Total Goals by PositionCode of Skaters")
 ```
-## Historgram
+## Histogram 
 Density plot is created using geom_histogram for mostSaves in one game by a goalie.
 
 ```{r echo=TRUE}
